@@ -1,8 +1,9 @@
+import json
 from Algoritmos import Algorithm
 
 
 class Flooding(Algorithm):
-    def __init__(self, topology):
+    def __init__(self, topology, node_name):
         """
         Initialize the Flooding algorithm with the provided network topology.
 
@@ -10,11 +11,13 @@ class Flooding(Algorithm):
             topology (dict): A dictionary representing the network topology with nodes and their neighbors.
         """
         self.topology = topology
-        self.initialize_node()
+        self.initialize_node(node_name)
 
     def initialize_node(self, node_name):
         """
         Initialize the current node by prompting the user for its name and neighbors.
+        Args:
+            node_name (str): The name of the current node.
         """
         self.node_name = node_name
         self.neighbors = self.topology.get(node_name, [])
@@ -27,10 +30,25 @@ class Flooding(Algorithm):
             message (str): The message to be sent.
             destination (str): The recipient node's name.
         """
+        message_data = {
+            "type": "message",
+            "headers": {"from": self.node_name, "to": destination, "hop_count": 0},
+            "payload": message,
+        }
+        self._process_message(message_data)
+
+    def _process_message(self, message_data):
+        # Process and display the message
         print(f"📤 Sending message to neighbors: {self.neighbors}")
-        print("💌 Message destination:", destination)
+        print("💌 Message destination:", message_data["headers"]["to"])
         print(f"📋 Visited nodes: [{self.node_name}]")
-        print("📩 Message:", message)
+        print("📩 Message:", message_data["payload"])
+
+        # Store the message as JSON
+        with open(
+            f"{self.node_name}_to_{message_data['headers']['to']}_message.json", "w"
+        ) as json_file:
+            json.dump(message_data, json_file, indent=4)
 
     def receive_message(self, message, sender, visited_nodes):
         """
@@ -41,19 +59,12 @@ class Flooding(Algorithm):
             sender (str): The sender node's name.
             visited_nodes (str): Comma-separated list of visited nodes.
         """
-        destination, message, sender = (
-            sender,
-            message,
-            self.node_name,
-        )  # Swap values for the received message
-        if destination == self.node_name:
-            print(f"📥 Message received from: {sender}, the message is: {message}")
-        elif self.node_name in visited_nodes:
-            print("🚫 Message already sent, no need to resend it")
-        else:
-            print("📤 Sending message to neighbors:", self.neighbors)
-            print(f"💌 Message destination: {destination}, sender: {sender}")
-            print("📋 Visited nodes:", visited_nodes + f", {self.node_name}")
+        message_data = {
+            "type": "message",
+            "headers": {"from": sender, "to": self.node_name, "hop_count": 0},
+            "payload": message,
+        }
+        self._process_message(message_data)
 
 
 def manual_input():
@@ -113,13 +124,13 @@ def Execute():
     # Create a dictionary to store the nodes in the network
     nodes = {}
     for node_name in topology.keys():
-        nodes[node_name] = Flooding(topology)
+        nodes[node_name] = Flooding(topology, node_name)
 
     # Function to send a message to other nodes
     def sendmessage():
         message = input("📝 Enter the message: ")
         destination = input("📬 Enter the destination: ")
-        flooding.send_message(message, destination)
+        nodes[destination].send_message(message, destination)
 
     # Function to receive and process a message
     def receivemessage():
@@ -133,11 +144,10 @@ def Execute():
         visited_nodes = input(
             "🌐 Enter the visited nodes in the format 'node1,node2,node3': "
         )
-        flooding.receive_message(message, sender, visited_nodes)
+        nodes[destination].receive_message(message, sender, visited_nodes)
 
     # Main menu for user interaction
     while True:
-
         print("\n\n1. ✉️ Send message")
         print("2. 📩 Receive message")
         print("3. 🚪 Exit")
