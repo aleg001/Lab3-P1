@@ -12,12 +12,12 @@ class Flooding(Algorithm):
         self.topology = topology
         self.initialize_node()
 
-    def initialize_node(self):
+    def initialize_node(self, node_name):
         """
         Initialize the current node by prompting the user for its name and neighbors.
         """
-        self.node_name = input("Enter the node name: ")
-        self.neighbors = self.topology.get(self.node_name, [])
+        self.node_name = node_name
+        self.neighbors = self.topology.get(node_name, [])
 
     def send_message(self, message, destination):
         """
@@ -56,8 +56,7 @@ class Flooding(Algorithm):
             print("📋 Visited nodes:", visited_nodes + f", {self.node_name}")
 
 
-# Define a function to create a network topology and send/receive messages using flooding protocol
-def Execute():
+def manual_input():
     # Create an empty dictionary to store the network topology
     topology = {}
 
@@ -71,8 +70,50 @@ def Execute():
         ).split(",")
         topology[node_name] = neighbors
 
-    # Create an instance of the Flooding class with the provided network topology
-    flooding = Flooding(topology)
+    return topology
+
+
+def automatic_input():
+    # Create a network topology with hard-coded data
+    return {
+        "NodeA": ["NodeB", "NodeC"],
+        "NodeB": ["NodeA", "NodeD"],
+        "NodeC": ["NodeA", "NodeD"],
+        "NodeD": ["NodeB", "NodeC"],
+    }
+
+
+# Define a function to create a network topology and send/receive messages using flooding protocol
+def automatic_messages(nodes):
+    # Send and receive messages using the Flooding algorithm
+    nodes["NodeA"].send_message("Hello, NodeB!", "NodeB")
+    nodes["NodeD"].receive_message("Hi there!", "NodeB", "NodeA,NodeC")
+    nodes["NodeC"].send_message("Message from NodeC", "NodeD")
+
+
+# Define a function to create a network topology and send/receive messages using flooding protocol
+def Execute():
+
+    op = input("Do you want to do a manual input? (s/n): ")
+    if op == "s":
+        topology = manual_input()
+        # Create an instance of the Flooding class with the provided network topology
+        flooding = Flooding(topology)
+        automatic = False
+
+    elif op == "n":
+        topology = automatic_input()
+        # Create an instance of the Flooding class with the provided network topology
+        flooding = Flooding(topology)
+        automatic = True
+    else:
+        print("Invalid option. Please try again.")
+        return
+
+    # Create a dictionary to store the nodes in the network
+    nodes = {}
+    for node_name in topology.keys():
+        nodes[node_name] = Flooding(topology)
 
     # Function to send a message to other nodes
     def sendmessage():
@@ -96,6 +137,7 @@ def Execute():
 
     # Main menu for user interaction
     while True:
+
         print("\n\n1. ✉️ Send message")
         print("2. 📩 Receive message")
         print("3. 🚪 Exit")
@@ -103,11 +145,14 @@ def Execute():
 
         # Process user's choice
         match option:
-            case 1:
+            case "1":
                 sendmessage()  # Call sendmessage function
-            case 2:
+            case "2":
                 receivemessage()  # Call receivemessage function
-            case 3:
+            case "3":
                 return  # Exit the program
             case _:
                 print("Invalid option. Please try again.")
+        # If automatic mode is selected, add automatic messages
+        if automatic:
+            automatic_messages(nodes)
