@@ -1,148 +1,168 @@
-import tkinter as tk
-from tkinter import simpledialog, messagebox
+import json
 from Algoritmos import Algorithm
 
 
-global recipient
-
-
 class Flooding(Algorithm):
-    """
-    A class representing the Flooding Algorithm for message propagation in a network.
-    """
+    def __init__(self, topology, node_name):
+        """
+        Initialize the Flooding algorithm with the provided network topology.
 
-    def __init__(self, node_name=None, neighbors=None):
+        Args:
+            topology (dict): A dictionary representing the network topology with nodes and their neighbors.
         """
-        Initializes the FloodingAlgorithm class by requesting user input.
-        """
-        if node_name and neighbors:
-            self.node_name = node_name
-            self.neighbors = neighbors.split(",")
-        else:
-            self.request_input()
+        self.topology = topology
+        self.initialize_node(node_name)
 
-    def request_input(self):
+    def initialize_node(self, node_name):
         """
-        Requests user input for the current node's name and its neighbors.
+        Initialize the current node by prompting the user for its name and neighbors.
+        Args:
+            node_name (str): The name of the current node.
         """
-        self.node_name = input("🌟 Enter the name of the current node: ")
-        neighbors = input("🌐 Enter the neighbors separated by commas: ")
-        self.neighbors = neighbors.split(",")
+        self.node_name = node_name
+        self.neighbors = self.topology.get(node_name, [])
 
-    def send_message(self, message, recipient):
+    def send_message(self, message, destination):
         """
-        Sends a message to the specified recipient and logs the action.
+        Send a message to a recipient in the network.
 
         Args:
             message (str): The message to be sent.
-            recipient (str): The recipient's name.
+            destination (str): The recipient node's name.
         """
-        print(f"📤 Sending message to neighbors: {', '.join(self.neighbors)}")
-        print(f"💌 Message to {recipient} from {self.node_name}: {message}")
-        print(f"🚶‍♂️ Visited nodes: [{self.node_name}]")
+        message_data = {
+            "type": "message",
+            "headers": {"from": self.node_name, "to": destination, "hop_count": 0},
+            "payload": message,
+        }
+        self._process_message(message_data)
+
+    def _process_message(self, message_data):
+        # Process and display the message
+        print(f"📤 Sending message to neighbors: {self.neighbors}")
+        print("💌 Message destination:", message_data["headers"]["to"])
+        print(f"📋 Visited nodes: [{self.node_name}]")
+        print("📩 Message:", message_data["payload"])
+
+        # Store the message as JSON
+        with open(
+            f"{self.node_name}_to_{message_data['headers']['to']}_message.json", "w"
+        ) as json_file:
+            json.dump(message_data, json_file, indent=4)
 
     def receive_message(self, message, sender, visited_nodes):
         """
-        Receives and processes a message from a sender.
+        Receive a message from a sender in the network.
 
         Args:
             message (str): The received message.
-            sender (str): The sender's name.
-            visited_nodes (list): List of visited nodes in the message propagation.
+            sender (str): The sender node's name.
+            visited_nodes (str): Comma-separated list of visited nodes.
         """
-        if recipient == self.node_name:
-            print(f"📬 Message received from {sender}: {message}")
-        elif self.node_name in visited_nodes:
-            print("⚠️ Message already sent, no need to resend.")
-        else:
-            print(f"📤 Sending message to neighbors: {', '.join(self.neighbors)}")
-            print(f"💌 Recipient: {recipient}, Sender: {sender}")
-            print(f"🚶‍♂️ Visited nodes: [{', '.join(visited_nodes)}, {self.node_name}]")
+        message_data = {
+            "type": "message",
+            "headers": {"from": sender, "to": self.node_name, "hop_count": 0},
+            "payload": message,
+        }
+        self._process_message(message_data)
 
 
-class FloodingApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Flooding Algorithm")
-        self.flooding = Flooding()
-        self.create_widgets()
+def manual_input():
+    # Create an empty dictionary to store the network topology
+    topology = {}
 
-    def create_widgets(self):
-        # Label and Entry for Node Name
-        tk.Label(self.root, text="Name of the node:").grid(
-            row=0, column=0, sticky=tk.W, padx=10, pady=5
-        )
-        self.node_name_var = tk.StringVar(value=self.flooding.node_name)
-        tk.Entry(self.root, textvariable=self.node_name_var).grid(
-            row=0, column=1, padx=10, pady=5
-        )
+    # Prompt the user to input the network topology by specifying nodes and their neighbors
+    while True:
+        node_name = input("Enter a node name (or press Enter to finish): ")
+        if not node_name:
+            break
+        neighbors = input(
+            f"Enter neighbors for {node_name} separated by commas: "
+        ).split(",")
+        topology[node_name] = neighbors
 
-        # Label and Entry for Neighbors
-        tk.Label(self.root, text="Neighbors (comma separated):").grid(
-            row=1, column=0, sticky=tk.W, padx=10, pady=5
-        )
-        self.neighbors_var = tk.StringVar(value=",".join(self.flooding.vecinos))
-        tk.Entry(self.root, textvariable=self.neighbors_var).grid(
-            row=1, column=1, padx=10, pady=5
-        )
-
-        # Send Message Section
-        tk.Label(self.root, text="Send Message:").grid(
-            row=2, column=0, sticky=tk.W, padx=10, pady=10
-        )
-        self.message_var = tk.StringVar()
-        tk.Entry(self.root, textvariable=self.message_var, width=40).grid(
-            row=2, column=1, padx=10, pady=10
-        )
-        self.destination_var = tk.StringVar()
-        tk.Entry(self.root, textvariable=self.destination_var, width=40).grid(
-            row=2, column=2, padx=10, pady=10
-        )
-        tk.Button(self.root, text="Send", command=self.send_message).grid(
-            row=2, column=3, padx=10, pady=10
-        )
-
-        # Receive Message Section
-        tk.Label(self.root, text="Receive Message:").grid(
-            row=3, column=0, sticky=tk.W, padx=10, pady=10
-        )
-        self.recv_message_var = tk.StringVar()
-        tk.Entry(self.root, textvariable=self.recv_message_var, width=40).grid(
-            row=3, column=1, padx=10, pady=10
-        )
-        self.sender_var = tk.StringVar()
-        tk.Entry(self.root, textvariable=self.sender_var, width=40).grid(
-            row=3, column=2, padx=10, pady=10
-        )
-        self.visited_tables_var = tk.StringVar()
-        tk.Entry(self.root, textvariable=self.visited_tables_var, width=40).grid(
-            row=3, column=3, padx=10, pady=10
-        )
-        tk.Button(self.root, text="Receive", command=self.receive_message).grid(
-            row=3, column=4, padx=10, pady=10
-        )
-
-    def send_message(self):
-        self.flooding.node_name = self.node_name_var.get()
-        self.flooding.vecinos = self.neighbors_var.get().split(",")
-        self.flooding.send_message(self.message_var.get(), self.destination_var.get())
-        messagebox.showinfo("Message Sent", "Message has been sent! 📤")
-
-    def receive_message(self):
-        self.flooding.node_name = self.node_name_var.get()
-        self.flooding.vecinos = self.neighbors_var.get().split(",")
-        self.flooding.receive_message(
-            self.recv_message_var.get(),
-            self.sender_var.get(),
-            self.visited_tables_var.get().split(","),
-        )
-        messagebox.showinfo("Message Received", "Message has been received! 📬")
+    return topology
 
 
-""" 
-# Run the tkinter application
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = FloodingApp(root)
-    root.mainloop()
-"""
+def automatic_input():
+    # Create a network topology with hard-coded data
+    return {
+        "NodeA": ["NodeB", "NodeC"],
+        "NodeB": ["NodeA", "NodeD"],
+        "NodeC": ["NodeA", "NodeD"],
+        "NodeD": ["NodeB", "NodeC"],
+    }
+
+
+# Define a function to create a network topology and send/receive messages using flooding protocol
+def automatic_messages(nodes):
+    # Send and receive messages using the Flooding algorithm
+    nodes["NodeA"].send_message("Hello, NodeB!", "NodeB")
+    nodes["NodeD"].receive_message("Hi there!", "NodeB", "NodeA,NodeC")
+    nodes["NodeC"].send_message("Message from NodeC", "NodeD")
+
+
+# Define a function to create a network topology and send/receive messages using flooding protocol
+def Execute():
+
+    op = input("Do you want to do a manual input? (s/n): ")
+    if op == "s":
+        topology = manual_input()
+        # Create an instance of the Flooding class with the provided network topology
+        flooding = Flooding(topology)
+        automatic = False
+
+    elif op == "n":
+        topology = automatic_input()
+        # Create an instance of the Flooding class with the provided network topology
+        flooding = Flooding(topology)
+        automatic = True
+    else:
+        print("Invalid option. Please try again.")
+        return
+
+    # Create a dictionary to store the nodes in the network
+    nodes = {}
+    for node_name in topology.keys():
+        nodes[node_name] = Flooding(topology, node_name)
+
+    # Function to send a message to other nodes
+    def sendmessage():
+        message = input("📝 Enter the message: ")
+        destination = input("📬 Enter the destination: ")
+        nodes[destination].send_message(message, destination)
+
+    # Function to receive and process a message
+    def receivemessage():
+        received = input(
+            "📥 Enter the message in the format 'destination,message,sender': "
+        )
+        parts = received.split(",")
+        destination = parts[0]
+        message = parts[1]
+        sender = parts[2]
+        visited_nodes = input(
+            "🌐 Enter the visited nodes in the format 'node1,node2,node3': "
+        )
+        nodes[destination].receive_message(message, sender, visited_nodes)
+
+    # Main menu for user interaction
+    while True:
+        print("\n\n1. ✉️ Send message")
+        print("2. 📩 Receive message")
+        print("3. 🚪 Exit")
+        option = input("Enter your choice: ")
+
+        # Process user's choice
+        match option:
+            case "1":
+                sendmessage()  # Call sendmessage function
+            case "2":
+                receivemessage()  # Call receivemessage function
+            case "3":
+                return  # Exit the program
+            case _:
+                print("Invalid option. Please try again.")
+        # If automatic mode is selected, add automatic messages
+        if automatic:
+            automatic_messages(nodes)
