@@ -38,6 +38,10 @@ public class Node {
         this.neighbors = findOutNeighbors(this.table);
     }
 
+    public ArrayList<Node> getNeighbors() {
+        return neighbors;
+    }
+
     /**
      *
      * @return

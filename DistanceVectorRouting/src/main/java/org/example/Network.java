@@ -116,6 +116,112 @@ public class Network {
             System.out.println();
         }
     }
-    
+
+    private int getCost(Node from, Node to) {
+        int fromId = from.getId();
+        int toId = to.getId();
+        return matrix[fromId][toId];
+    }
+
+    public void sendMessage(Node source, Node destination, String messageContent) {
+        Message message = new Message(source, destination, messageContent);
+
+        // Utilizar el algoritmo de Dijkstra para encontrar la ruta más corta
+        ArrayList<Node> shortestPath = dijkstraShortestPath(source, destination);
+
+        if (shortestPath == null || shortestPath.isEmpty()) {
+            System.out.println("No se pudo encontrar una ruta desde " + source + " hasta " + destination);
+            return;
+        }
+
+        // Mostrar la ruta
+        System.out.println("Enviando mensaje desde " + source + " hasta " + destination + ":");
+        System.out.println("Contenido: " + message.getContent());
+
+        Node previousNode = null;
+        for (Node node : shortestPath) {
+            if (previousNode != null) {
+                System.out.println("Saltó desde " + previousNode + " a " + node + " (" + getCost(previousNode, node) + ")");
+            }
+
+            if (node == destination) {
+                System.out.println("Mensaje entregado a " + destination);
+                break;
+            }
+
+            previousNode = node;
+        }
+    }
+
+    private ArrayList<Node> dijkstraShortestPath(Node source, Node destination) {
+        HashMap<Node, Integer> distance = new HashMap<>();
+        HashMap<Node, Node> previousNode = new HashMap<>();
+        ArrayList<Node> unvisitedNodes = new ArrayList<>(nodes);
+
+        // Inicializar las distancias
+        for (Node node : nodes) {
+            distance.put(node, Integer.MAX_VALUE);
+            previousNode.put(node, null);
+        }
+        distance.put(source, 0);
+
+        while (!unvisitedNodes.isEmpty()) {
+            Node currentNode = getClosestNode(unvisitedNodes, distance);
+
+            if (currentNode == null) {
+                // No se pudo encontrar una ruta desde el origen hasta el destino
+                return null;
+            }
+
+            if (currentNode == destination) {
+                return reconstructPath(previousNode, destination);
+            }
+
+            unvisitedNodes.remove(currentNode);
+
+            for (Node neighbor : currentNode.getNeighbors()) {
+                int alt = distance.get(currentNode) + getCost(currentNode, neighbor);
+
+                if (alt < distance.get(neighbor)) {
+                    distance.put(neighbor, alt);
+                    previousNode.put(neighbor, currentNode);
+                }
+            }
+        }
+
+        // No se pudo encontrar una ruta desde el origen hasta el destino
+        return null;
+    }
+
+
+    private Node getClosestNode(ArrayList<Node> nodes, HashMap<Node, Integer> distance) {
+        Node closestNode = null;
+        int closestDistance = Integer.MAX_VALUE;
+
+        for (Node node : nodes) {
+            int nodeDistance = distance.get(node);
+            if (nodeDistance < closestDistance) {
+                closestNode = node;
+                closestDistance = nodeDistance;
+            }
+        }
+
+        return closestNode;
+    }
+
+    private ArrayList<Node> reconstructPath(HashMap<Node, Node> previousNode, Node destination) {
+        ArrayList<Node> path = new ArrayList<>();
+        Node currentNode = destination;
+
+        while (currentNode != null) {
+            path.add(currentNode);
+            currentNode = previousNode.get(currentNode);
+        }
+
+        Collections.reverse(path);
+        return path;
+    }
+
+
 }
 
