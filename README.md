@@ -34,8 +34,11 @@ El elemento "type" indica el tipo de paquete. Los encabezados (headers) mínimos
 Enrutamiento en Internet
 https://es.wikipedia.org/wiki/Encaminamiento
 
-Algoritmo de Dijkstra
+Algoritmo de Dijkstra:
 https://es.wikipedia.org/wiki/Algoritmo_de_Dijkstra
 
-Flooding
+Flooding:
 https://es.wikipedia.org/wiki/Inundaci%C3%B3n_de_red#:~:text=La%20inundaci%C3%B3n%20(en%20ingl%C3%A9s%3A%20flooding,la%20que%20se%20ha%20recibido.
+
+Distance Vector: 
+Smith, B. R., Murthy, S., & Garcia-Luna-Aceves, J. J. (1997, February). Securing distance-vector routing protocols. In Proceedings of SNDSS'97: Internet Society 1997 Symposium on Network and Distributed System Security (pp. 85-92). IEEE.
