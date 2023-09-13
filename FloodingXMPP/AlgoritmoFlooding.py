@@ -146,7 +146,7 @@ class Flooding(slixmpp.ClientXMPP):
 
         print("\n🚀 Sending Message 🚀")
 
-        neighbors = self.get_neighbors(self.graph)
+        neighbors = self.NeighborSelection(self.graph)
 
         for i in neighbors:
             if i == self.email:
@@ -164,12 +164,17 @@ class Flooding(slixmpp.ClientXMPP):
 
     def NeighborSelection(self, node):
         print("\n📋 Getting neighbors from file...")
-        file_name = input("Enter the file name (without extension): ")
-        data = self.load_data_from_file(file_name)
-        if data:
-            neighbors = list(data[node])
-            return [self.keys[n] for n in neighbors]
-        return []
+        with open("Topologia.txt", "r") as file:
+            data = json.load(file)
+
+        data = data["config"]
+        neighbors = list(data[node])
+
+        list_neighbors = []
+        for n in neighbors:
+            list_neighbors.append(self.keys[n])
+
+        return list_neighbors
 
     async def message(self, msg):
         if self.old:

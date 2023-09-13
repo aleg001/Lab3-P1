@@ -10,7 +10,7 @@ def main():
 
         if option == "1":
             usuario = NodeSelect()
-            server = Flooding(usuario, "qwerty")
+            server = Flooding(usuario, "1234")
             server.connect(disable_starttls=True)
             server.process(forever=False)
         elif option == "2":

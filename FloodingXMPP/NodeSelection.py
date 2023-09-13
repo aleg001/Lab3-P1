@@ -3,7 +3,7 @@ import json
 
 def NodeSelect():
     print("\nSelect node from list ")
-    file_name = input("Enter the fsile name (without txt extension): ")
+    file_name = input("Enter the file name (without txt extension): ")
     file_name_with_extension = file_name + ".txt"
 
     try:
