@@ -14,6 +14,7 @@ Los algoritmos de enrutamiento operan en nodos interconectados. Cada nodo conoce
 Los algoritmos a implementar son:
 - **Dijkstra**: Requiere topología (nodos, aristas).
 - **Flooding**: Generalmente no requiere inputs, pero puede usar la topología si es necesario.
+- **Flooding**: Unicamente depende de las distancias de costo entre dos nodos en la red.
 
 ### 📦 Paquetes
 Los paquetes a enviar tendrán una estructura tipo JSON como la siguiente:

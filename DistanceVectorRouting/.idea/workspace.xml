@@ -1,14 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_TEST_SOURCES" value="false" />
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6e5f7d9-ff38-4e76-be9c-e517f84c5d01" name="Changes" comment="" />
+    <list default="true" id="04066b68-3a17-4859-a053-5eb86818d5b3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/JavaDoc/allclasses-index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/allpackages-index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/copy.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/element-list" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/help-doc.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-1.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-10.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-11.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-3.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-4.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-5.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-6.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-7.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-8.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-9.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/jquery-ui.overrides.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/legal/ADDITIONAL_LICENSE_INFO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/legal/ASSEMBLY_EXCEPTION" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/legal/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/legal/jquery.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/legal/jqueryUI.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/member-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/module-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/org/example/XMPPClient.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/org/example/XMPPMain.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/org/example/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/org/example/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/overview-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/package-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/resources/glass.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/resources/x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-bg_glass_55_fbf9ee_1x400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-bg_glass_65_dadada_1x400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-bg_glass_75_dadada_1x400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-bg_glass_75_e6e6e6_1x400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-bg_glass_95_fef1ec_1x400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-bg_highlight-soft_75_cccccc_1x100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-icons_222222_256x240.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-icons_2e83ff_256x240.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-icons_454545_256x240.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-icons_888888_256x240.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-icons_cd0a0a_256x240.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/jquery-3.5.1.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/jquery-ui.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/jquery-ui.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/jquery-ui.structure.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/script.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/search.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/stylesheet.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/tag-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaDoc/type-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/XMPPClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/XMPPClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/XMPPMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/XMPPMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/XMPPClient$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/XMPPClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/XMPPClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/XMPPMain.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/XMPPMain.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -20,35 +93,85 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="ProjectId" id="2VHnoHlUDiiMf5gExHxdKutygpE" />
+  <component name="ProjectId" id="2Tdinzuhi3YQcMghTWXKeU0ur14" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/Users/oestr/WorkSpaceIJ/Network/src/main/java/org/example"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Users/oestr/WorkSpaceIJ/ProyectoRedes&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\Users\oestr\WorkSpaceIJ\Network\src\main\java\org\example" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Users\oestr\WorkSpaceIJ\Network\src\main\java\org\example" />
+      <recent name="D:\Users\oestr\WorkSpaceIJ\ProyectoRedes - copia\src" />
+      <recent name="D:\Users\oestr\WorkSpaceIJ\ProyectoRedes\src\main\java" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.example" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Segundo">
+    <configuration name="Cuarta" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="org.example.XMPPMain" />
+      <module name="ProyectoRedes" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Segundo" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="org.example.XMPPMain" />
+      <module name="ProyectoRedes" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Tercero" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="org.example.XMPPMain" />
+      <module name="ProyectoRedes" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Cuarta" />
+      <item itemvalue="Application.Tercero" />
+      <item itemvalue="Application.Segundo" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="f6e5f7d9-ff38-4e76-be9c-e517f84c5d01" name="Changes" comment="" />
-      <created>1694502048300</created>
+      <changelist id="04066b68-3a17-4859-a053-5eb86818d5b3" name="Changes" comment="" />
+      <created>1691379534672</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1694502048300</updated>
+      <updated>1691379534672</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="org.jivesoftware.smack.sasl.SASLErrorException" package="org.jivesoftware.smack.sasl" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/ProyectoRedes$XMPPMain.ic" NAME="XMPPMain Coverage Results" MODIFIED="1692596422727" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.example.*</FILTER>
+    </SUITE>
   </component>
 </project>
