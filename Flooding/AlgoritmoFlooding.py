@@ -1,168 +1,228 @@
 import json
-from Algoritmos import Algorithm
+from slixmpp.exceptions import IqError, IqTimeout
+from slixmpp.xmlstream import ElementBase, ET, register_stanza_plugin
+import slixmpp
+import asyncio
+import aioconsole
+from Constants import XEP_0030, XEP_0045, XEP_0085, XEP_0199, XEP_0353
 
 
-class Flooding(Algorithm):
-    def __init__(self, topology, node_name):
-        """
-        Initialize the Flooding algorithm with the provided network topology.
+class Flooding(slixmpp.ClientXMPP):
+    def __init__(self, jid, password):
+        super().__init__(jid, password)
+        self.email = jid
+        self.old = True
+        self.register_plugins()
+        self.add_event_handler("session_start", self.start)
+        self.add_event_handler("message", self.message)
+        self.Online = False
+        self.topology = None
+        self.message_trace = []
 
-        Args:
-            topology (dict): A dictionary representing the network topology with nodes and their neighbors.
-        """
-        self.topology = topology
-        self.initialize_node(node_name)
+    def register_plugins(self):
+        plugins = [XEP_0030, XEP_0045, XEP_0085, XEP_0199, XEP_0353]
+        for plugin in plugins:
+            self.register_plugin(plugin)
 
-    def initialize_node(self, node_name):
-        """
-        Initialize the current node by prompting the user for its name and neighbors.
-        Args:
-            node_name (str): The name of the current node.
-        """
-        self.node_name = node_name
-        self.neighbors = self.topology.get(node_name, [])
+    def load_data_from_file(self, filename):
+        fileExt = filename + ".txt"
+        try:
+            with open(fileExt, "r") as file:
+                data = json.load(file)
 
-    def send_message(self, message, destination):
-        """
-        Send a message to a recipient in the network.
+            data = data["config"]
+            return data
 
-        Args:
-            message (str): The message to be sent.
-            destination (str): The recipient node's name.
-        """
-        message_data = {
+        except FileNotFoundError:
+            print(f"File '{fileExt}' not found. Please make sure the file exists.")
+            return None
+
+    def create_message_table(self, o, d, n, m):
+        return {
             "type": "message",
-            "headers": {"from": self.node_name, "to": destination, "hop_count": 0},
-            "payload": message,
+            "headers": {
+                "from": o,
+                "to": d,
+                "visited": n,
+            },
+            "payload": m,
         }
-        self._process_message(message_data)
 
-    def _process_message(self, message_data):
-        # Process and display the message
-        print(f"📤 Sending message to neighbors: {self.neighbors}")
-        print("💌 Message destination:", message_data["headers"]["to"])
-        print(f"📋 Visited nodes: [{self.node_name}]")
-        print("📩 Message:", message_data["payload"])
+    async def ToDict(self, package):
+        try:
+            Pack = package.replace("'", '"')
+            return json.loads(Pack)
+        except json.JSONDecodeError as err:
+            print(err)
+            return None
 
-        # Store the message as JSON
-        with open(
-            f"{self.node_name}_to_{message_data['headers']['to']}_message.json", "w"
-        ) as json_file:
-            json.dump(message_data, json_file, indent=4)
+    async def start(self, event):
+        try:
+            print("🚀 Initializing XMPP client...")
+            self.send_presence()
+            print("📡 Sending presence...")
+            self.get_roster()
+            print("📋 Getting roster...")
+            await asyncio.sleep(2)
+            self.old = False
+            print("📋 Creating XMPP menu task...")
+            create_xmpp_menu_task = asyncio.create_task(self.create_xmpp_menu())
+            await create_xmpp_menu_task
+            print("✅ XMPP menu task completed.")
 
-    def receive_message(self, message, sender, visited_nodes):
-        """
-        Receive a message from a sender in the network.
+        except Exception as e:
+            print(f"❌ Error: {e}")
 
-        Args:
-            message (str): The received message.
-            sender (str): The sender node's name.
-            visited_nodes (str): Comma-separated list of visited nodes.
-        """
-        message_data = {
-            "type": "message",
-            "headers": {"from": sender, "to": self.node_name, "hop_count": 0},
-            "payload": message,
-        }
-        self._process_message(message_data)
+    async def create_xmpp_menu(self):
+        self.Online = True
+        self.keys = self.NodeSelection()
+        self.graph = next((k for k, v in self.keys.items() if v == self.email), None)
 
+        print("\n📬 Welcome to your Messages and Notifications 📬")
+        await asyncio.sleep(5)
 
-def manual_input():
-    # Create an empty dictionary to store the network topology
-    topology = {}
+        opComm = 0
+        while opComm != 4:
+            opComm = await self.MenuComms()
+            if opComm == 1:
+                await self.send_user_message()
+                await asyncio.sleep(1)
 
-    # Prompt the user to input the network topology by specifying nodes and their neighbors
-    while True:
-        node_name = input("Enter a node name (or press Enter to finish): ")
-        if not node_name:
-            break
-        neighbors = input(
-            f"Enter neighbors for {node_name} separated by commas: "
-        ).split(",")
-        topology[node_name] = neighbors
+            elif opComm == 2:
+                print("\nGoodbye! 👋 Session closed.")
+                self.disconnect()
+                exit()
 
-    return topology
+    async def MenuComms(self):
+        print("\n1) ✉️ Send a Message")
+        print("2) 🚪 Exit")
 
+        while True:
+            try:
+                op = int(
+                    await aioconsole.ainput("Enter the number of your desired option: ")
+                )
+                if op in range(1, 10):
+                    return op
+                else:
+                    print(
+                        "\n❌ Invalid option. Please choose a number between 1 and 9.\n"
+                    )
+            except ValueError:
+                print("\n❌ Invalid input. Please enter a number.\n")
 
-def automatic_input():
-    # Create a network topology with hard-coded data
-    return {
-        "NodeA": ["NodeB", "NodeC"],
-        "NodeB": ["NodeA", "NodeD"],
-        "NodeC": ["NodeA", "NodeD"],
-        "NodeD": ["NodeB", "NodeC"],
-    }
+    async def send_user_message(self):
+        print("\n📬 Sending a Message to a User 📬")
+        recipient_node = None
+        while True:
+            print("Select a node from the list: ")
+            nodes = self.keys
+            node_keys = list(key for key, value in nodes.items())
+            node_values = list(value for key, value in nodes.items())
+            for i, z in enumerate(node_keys):
+                print(f"{i + 1}. {z}")
 
+            try:
+                selNode = await aioconsole.ainput("Enter the node number: ")
+                selNode = int(selNode)
+                if 1 <= selNode <= len(nodes):
+                    if self.graph == node_keys[selNode - 1]:
+                        print("🚫 You can't send a message to yourself.\n")
+                        continue
+                    else:
+                        recipient_node = node_keys[selNode - 1]
+                        break
+                else:
+                    print("Please enter a valid number.")
 
-# Define a function to create a network topology and send/receive messages using flooding protocol
-def automatic_messages(nodes):
-    # Send and receive messages using the Flooding algorithm
-    nodes["NodeA"].send_message("Hello, NodeB!", "NodeB")
-    nodes["NodeD"].receive_message("Hi there!", "NodeB", "NodeA,NodeC")
-    nodes["NodeC"].send_message("Message from NodeC", "NodeD")
+            except ValueError:
+                print("Please enter a valid number.")
 
+        user_input = await aioconsole.ainput("Enter your message: ")
 
-# Define a function to create a network topology and send/receive messages using flooding protocol
-def Execute():
+        vNode = [self.graph]
+        Data = self.create_message_table(self.graph, recipient_node, vNode, user_input)
+        message_json = json.dumps(Data)
 
-    op = input("Do you want to do a manual input? (s/n): ")
-    if op == "s":
-        topology = manual_input()
-        # Create an instance of the Flooding class with the provided network topology
-        flooding = Flooding(topology)
-        automatic = False
+        print("\n🚀 Sending Message 🚀")
 
-    elif op == "n":
-        topology = automatic_input()
-        # Create an instance of the Flooding class with the provided network topology
-        flooding = Flooding(topology)
-        automatic = True
-    else:
-        print("Invalid option. Please try again.")
-        return
+        neighbors = self.get_neighbors(self.graph)
 
-    # Create a dictionary to store the nodes in the network
-    nodes = {}
-    for node_name in topology.keys():
-        nodes[node_name] = Flooding(topology, node_name)
+        for i in neighbors:
+            if i == self.email:
+                continue
+            if i not in vNode:
+                recipient_jid = i
+                self.send_message(mto=recipient_jid, mbody=message_json, mtype="chat")
+                print(f"✉️ Message sent to {i}.")
+                await asyncio.sleep(1)
 
-    # Function to send a message to other nodes
-    def sendmessage():
-        message = input("📝 Enter the message: ")
-        destination = input("📬 Enter the destination: ")
-        nodes[destination].send_message(message, destination)
+    def NodeSelection(self):
+        print("\n📋 Getting nodes from file...")
+        file_name = input("Enter the file name (without extension): ")
+        return self.load_data_from_file(file_name)
 
-    # Function to receive and process a message
-    def receivemessage():
-        received = input(
-            "📥 Enter the message in the format 'destination,message,sender': "
-        )
-        parts = received.split(",")
-        destination = parts[0]
-        message = parts[1]
-        sender = parts[2]
-        visited_nodes = input(
-            "🌐 Enter the visited nodes in the format 'node1,node2,node3': "
-        )
-        nodes[destination].receive_message(message, sender, visited_nodes)
+    def NeighborSelection(self, node):
+        print("\n📋 Getting neighbors from file...")
+        file_name = input("Enter the file name (without extension): ")
+        data = self.load_data_from_file(file_name)
+        if data:
+            neighbors = list(data[node])
+            return [self.keys[n] for n in neighbors]
+        return []
 
-    # Main menu for user interaction
-    while True:
-        print("\n\n1. ✉️ Send message")
-        print("2. 📩 Receive message")
-        print("3. 🚪 Exit")
-        option = input("Enter your choice: ")
+    async def message(self, msg):
+        if self.old:
+            return
 
-        # Process user's choice
-        match option:
-            case "1":
-                sendmessage()  # Call sendmessage function
-            case "2":
-                receivemessage()  # Call receivemessage function
-            case "3":
-                return  # Exit the program
-            case _:
-                print("Invalid option. Please try again.")
-        # If automatic mode is selected, add automatic messages
-        if automatic:
-            automatic_messages(nodes)
+        if msg["type"] == "chat" and "message" in msg["body"]:
+            sender = msg["from"].bare
+            mInfo = await self.ToDict(msg["body"].replace("'", '"'))
+            mCont = mInfo["payload"]
+            ori = mInfo["headers"]["from"]
+            dest = mInfo["headers"]["to"]
+            curMess = str(ori + "," + dest + "," + mCont)
+
+            if curMess in self.message_trace:
+                self.message_trace.append(curMess)
+                return
+            else:
+                self.message_trace.append(curMess)
+
+            vNode = mInfo["headers"]["visited"]
+            if self.graph in vNode:
+                return
+
+            if dest == self.graph:
+                print(f"\n💌 Message 💌\n👤 {ori} sent a message: {mCont}")
+                return
+
+            else:
+                vNode.append(self.graph)
+                message_table = self.create_message_table(ori, dest, vNode, mCont)
+                table = json.dumps(message_table)
+                relay = True
+                neighbors = self.NeighborSelection(self.graph)
+                for i in neighbors:
+                    neighbor_name = ""
+                    reverse_keys = {v: k for k, v in self.keys.items()}
+                    neighbor_name = reverse_keys.get(i, "")
+
+                    if (
+                        i == self.email
+                        or neighbor_name == ori
+                        or neighbor_name in vNode
+                    ):
+                        continue
+
+                    else:
+                        recipient_jid = i
+                        self.send_message(mto=recipient_jid, mbody=table, mtype="chat")
+                        print(f"Relaying message to {i}.")
+                        relay = False
+                        await asyncio.sleep(1)
+
+                if relay:
+                    print(
+                        "📢 Oops! It seems there are no nodes available to relay the message. 😕"
+                    )
